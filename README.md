@@ -24,29 +24,29 @@ let config = AlertViewBuilder()
 
 | Description      | Default value  |
 |-------------| -----|
-| withIcon(_ image: UIImage?)     | not value Default |
-| withTitle(_ title: String?)     | not value Default |
-| withMessage(_ message: String?)   | not value Default |
-| withMessage(_ message: NSAttributedString?)     | not value Default |
-| withTextAlign(_ alignment: NSTextAlignment)    | .center |
-| withTapDismiss(_ tap: Bool)     | true |
-| withEnableVibrate(_ enable: Bool)     | true |
-| withCancelButtonTitle(_ title: String?)     | not value Default |
-| withDoneButtonTitle(_ title: String?)     | not value Default |
-| withTitleColorButtonDone(_ color: UIColor)     | .white |
-| withBackgroundColorButtonDone(_ color: UIColor)    | UIColor(red: 0.03, green: 0.31, blue: 0.62, alpha: 1) |
-| withTitleColorButtonCancel(_ color: UIColor)     | .white |
-| withBackgroundColorButtonCancel(_ color: UIColor)     | .red |
+| icon(_ image: UIImage?)     | not value Default |
+| title(_ title: String?)     | not value Default |
+| message(_ message: String?)   | not value Default |
+| styledMessage(_ message: NSAttributedString?)     | not value Default |
+| textAlign(_ alignment: NSTextAlignment)    | .center |
+| tapDismiss(_ tap: Bool)     | true |
+| enableVibrate(_ enable: Bool)     | true |
+| cancelButtonTitle(_ title: String?)     | not value Default |
+| doneButtonTitle(_ title: String?)     | not value Default |
+| titleColorButtonDone(_ color: UIColor)     | .white |
+| backgroundColorButtonDone(_ color: UIColor)    | UIColor(red: 0.03, green: 0.31, blue: 0.62, alpha: 1) |
+| titleColorButtonCancel(_ color: UIColor)     | .white |
+| backgroundColorButtonCancel(_ color: UIColor)     | .red |
 
 ###Configuration file declaration
 
 ```swift
 let config = AlertViewBuilder()
-            .withTitle("Parceiro Ambev alerta!")
-            .withTextAlign(.center)
-            .withTapDismiss(true)
-            .withCancelButtonTitle("Cancel")
-            .withDoneButtonTitle("Confirm")
+            .title("Parceiro Ambev alerta!")
+            .textAlign(.center)
+            .tapDismiss(true)
+            .cancelButtonTitle("Cancel")
+            .doneButtonTitle("Confirm")
             .build()
 ```
 
@@ -72,4 +72,3 @@ alert.show(config: config,
                     print("Click in Confirmar")
         })
 ```
-
