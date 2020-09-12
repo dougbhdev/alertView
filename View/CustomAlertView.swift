@@ -17,64 +17,86 @@ public class CustomAlertView: UIView, WindowView {
     // MARK: - Private properties
     
     private var timer: Timer?
-    private var heightStack: CGFloat = 42.0
-    private var position: CGFloat = 20.0
-    private let margin: CGFloat = 15.0
-    
     private var tapDismissScreen: Bool = false
     private var disableDoneButton: Bool = false
-    private var actionDoneCallback: AlertDoneAction?
-    private var actionCancelCallback: AlertCancelAction?
+    private var actionDoneCallback: AlertAction?
+    private var actionCancelCallback: AlertAction?
+
+    // Uma coisa que aprendi e que ajuda muito principalmente na hora de dar manutenções pontuais
+    // foi separar as "constants" de tamanho e posicionamento em um `enum` de metricas
+
+    // MARK: - Metrics
+
+    private enum Metrics {
+        static let heightStack: CGFloat = 42.0
+        static let position: CGFloat = 20.0
+        // Tomei a liberdade de ajustar para 16 sua margin
+        // uma vez que o iOS utiliza-se de múltiplos de 4 =)
+        static let margin: CGFloat = 16.0 
+    }
     
+    // MARK: - UI
+
     private lazy var alertImage: UIImageView = {
         let img = UIImageView()
+
         img.contentMode = .scaleAspectFit
         img.tintColor = .blue
         img.clipsToBounds = true
         img.sizeToFit()
         img.accessibilityIdentifier = "alertImageIdentifier"
+        
         return img
     }()
     
     private lazy var alertTitle: UILabel = {
         let label = UILabel()
+
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textColor = .black
         label.accessibilityIdentifier = "alertTitleIdentifier"
+        
         return label
     }()
     
     private lazy var alertSubTitle: UILabel = {
         let label = UILabel()
+
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .black
         label.accessibilityIdentifier = "alertSubTitleIdentifier"
+        
         return label
     }()
     
     private lazy var alertDoneButton: CustomButton = {
         let button = CustomButton(type: .custom)
+
         button.cornerRadius = 5.0
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.addTarget(self, action: #selector(alertButtonActionDone(_:)), for: .touchUpInside)
         button.accessibilityIdentifier = "alertDoneButtonIdentifier"
+        
         return button
     }()
     
     private lazy var alertCancelButton: CustomButton = {
         let button = CustomButton(type: .custom)
+
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.addTarget(self, action: #selector(alertButtonActionCancel(_:)), for: .touchUpInside)
         button.accessibilityIdentifier = "alertCancelButtonIdentifier"
+        
         return button
     }()
     
     private lazy var stack: UIStackView = {
         let stackView = UIStackView()
+
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
@@ -100,11 +122,14 @@ public class CustomAlertView: UIView, WindowView {
     // MARK: - Public functions
     
     public func configureAlert(with config: AlertViewConfig) {
-        
         configureBackground()
+
         let dialogViewWidth: CGFloat = frame.width - 60
         tapDismissScreen = config.tapDismiss
         
+        // Não sei se foi intencional, mas essa abordagem de N funções dentro de outra
+        // eu acho muito estranho, sem contar que para mim é meio "code smell"
+        // mais uma vez, é uma opinião minha, então fique a vontade para ignora-la =)
         func setupImage() {
             guard let image = config.image else { return }
             configImage(image: image, dialogWidth: dialogViewWidth)
@@ -128,23 +153,27 @@ public class CustomAlertView: UIView, WindowView {
         
         func setupStackButtons() {
             let configStack = getConfigureButtons(buttonCancelTitle: config.cancelButtonTitle, buttonDoneTitle: config.doneButtonTitle, sizeHeightStack: heightStack)
+            
             stack.frame = CGRect(x: margin, y: position, width: dialogViewWidth - (margin * 2), height: configStack.sizeStack)
             dialogBox.addSubview(stack)
             position = stack.frame.maxY + 15
         }
         
         let parameters: [Any?] = [config.image, config.title, config.attributedDescription, config.cancelButtonTitle, config.doneButtonTitle]
+        
         let functions = [setupImage, setupTitle, setupDescription, setupCancelButton, setupDoneButton]
+
         _ = parameters.enumerated().map { index, element in
             if element != nil {
                 functions[index]()
             }
         }
+
         setupStackButtons()
         createDialog(position: position)
     }
     
-    public func actionCallback(done: AlertDoneAction? = nil, cancel: AlertCancelAction? = nil) {
+    public func actionCallback(done: AlertAction? = nil, cancel: AlertAction? = nil) {
         actionDoneCallback = done
         actionCancelCallback = cancel
     }
@@ -164,6 +193,7 @@ public class CustomAlertView: UIView, WindowView {
         guard let done = buttonDoneTitle else {
             return(0, sizeHeightStack)
         }
+
         if done.count > 11 && (buttonCancelTitle != nil) {
             stack.axis = .vertical
             heightStack = (sizeHeightStack * 2)
@@ -171,6 +201,7 @@ public class CustomAlertView: UIView, WindowView {
             stack.insertArrangedSubview(alertDoneButton, at: 0)
             stack.insertArrangedSubview(alertCancelButton, at: 1)
         }
+
         return (done.count, heightStack)
     }
     
@@ -204,6 +235,7 @@ public class CustomAlertView: UIView, WindowView {
         
         let font = UIFont.systemFont(ofSize: 15)
         let heightLabel = heightForView(text: message, font: font, width: dialogWidth - (margin * 4))
+        
         alertSubTitle.frame = CGRect(x: margin * 2, y: position, width: dialogWidth - (margin * 4), height: heightLabel + 10)
         alertSubTitle.attributedText = message
         
@@ -271,6 +303,7 @@ public class CustomAlertView: UIView, WindowView {
         if let timer = timer {
             timer.invalidate()
         }
+        
         timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
             self.dismiss(animated: animated)
         }

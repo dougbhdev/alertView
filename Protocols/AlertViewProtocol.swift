@@ -7,13 +7,14 @@
 
 import Foundation
 
-public typealias AlertDoneAction = (() -> Void)
-public typealias AlertCancelAction = (() -> Void)
+// Como as suas 2 ações são closures "identicas" não faz sentido ter um typealias para cada uma
+public typealias AlertAction = (() -> Void)
 
-public protocol AlertViewProtocol {
+// É interessante "tipar" seu protocolo para garantir que, por exemplo, uma Struct
+// não consiga conformar com o mesmo, quando não temos a tipagem basicamente
+// "qualquer" objeto/classe (Any) conseguirá conformar com o mesmo
+public protocol AlertViewProtocol: class {
     
-    func show(config: AlertViewConfig,
-              doneAction: AlertDoneAction?,
-              cancelAction: AlertCancelAction?)
+    func show(config: AlertViewConfig, doneAction: AlertAction?, cancelAction: AlertAction?)
     
 }

@@ -7,22 +7,27 @@
 
 import Foundation
 
-protocol AlertViewBuilderProtocol {
+// Aqui vale o mesmo conceito de "tipagem" do outro protocolo
+// Outro ponto o uso "excessivo" do termo "with" gera uma certa
+// "poluição" de código quando você utiliza mais de um atributo
+// é mais interessante "simplificar" os nomes dos métodos
+// Neste caso é apenas uma dica, fique a vontade para desconsidera-la
+// caso não ache válida =)
+protocol AlertViewBuilderProtocol: class {
     
-    func withTitle(_ title: String?) -> AlertViewBuilder
-    func withIcon(_ image: UIImage?) -> AlertViewBuilder
-    func withMessage(_ message: String?) -> AlertViewBuilder
-    func withMessage(_ message: NSAttributedString?) -> AlertViewBuilder
-    func withTextAlign(_ alignment: NSTextAlignment) -> AlertViewBuilder
-    func withTapDismiss(_ tap: Bool) -> AlertViewBuilder
-    func withEnableVibrate(_ enable: Bool) -> AlertViewBuilder
-    func withCancelButtonTitle(_ title: String?) -> AlertViewBuilder
-    func withDoneButtonTitle(_ title: String?) -> AlertViewBuilder
+    func title(_ title: String?) -> AlertViewBuilder
+    func icon(_ image: UIImage?) -> AlertViewBuilder
+    func message(_ message: String?) -> AlertViewBuilder
+    func styledMessage(_ message: NSAttributedString?) -> AlertViewBuilder
+    func textAlign(_ alignment: NSTextAlignment) -> AlertViewBuilder
+    func tapDismiss(_ tap: Bool) -> AlertViewBuilder
+    func enableVibrate(_ enable: Bool) -> AlertViewBuilder
+    func cancelButtonTitle(_ title: String?) -> AlertViewBuilder
+    func doneButtonTitle(_ title: String?) -> AlertViewBuilder
     
-    //custom button
-    func withTitleColorButtonDone(_ color: UIColor) -> AlertViewBuilder
-    func withBackgroundColorButtonDone(_ color: UIColor) -> AlertViewBuilder
+    func titleColorButtonDone(_ color: UIColor) -> AlertViewBuilder
+    func backgroundColorButtonDone(_ color: UIColor) -> AlertViewBuilder
+    func titleColorButtonCancel(_ color: UIColor) -> AlertViewBuilder
+    func backgroundColorButtonCancel(_ color: UIColor) -> AlertViewBuilder
     
-    func withTitleColorButtonCancel(_ color: UIColor) -> AlertViewBuilder
-    func withBackgroundColorButtonCancel(_ color: UIColor) -> AlertViewBuilder
 }
